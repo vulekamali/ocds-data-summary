@@ -1,4 +1,4 @@
-FROM openup/docker-python-nodejs:python3.7-nodejs12
+FROM python:3.10
 
 ENV POETRY_VIRTUALENVS_CREATE false
 ENV PIP_NO_CACHE_DIR off
@@ -11,8 +11,6 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 
 RUN set -ex; \
   apt-get update; \
-  # dependencies for building Python packages \
-  apt-get install -y build-essential python3.7-dev; \
   # psycopg2 dependencies \
   apt-get install -y libpq-dev; \
   # git for codecov file listing \
@@ -42,10 +40,6 @@ RUN set -ex; \
 USER django
 
 WORKDIR /app
-
-RUN set -ex; \
-  yarn; \
-  yarn build
 
 EXPOSE 5000
 CMD /app/bin/start.sh
