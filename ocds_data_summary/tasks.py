@@ -15,7 +15,8 @@ def get_settings():
         if setting.isupper() and setting.isalpha():
             settings_dict[setting] = getattr(kingfisher_settings, setting)    
     settings_dict.update({
-        "DATABASE_URL": settings.DATABASE_URL
+        "DATABASE_URL": settings.DATABASE_URL,
+        "LOG_LEVEL": "INFO",
     })
     return settings_dict
 

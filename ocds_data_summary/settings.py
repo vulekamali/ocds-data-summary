@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
+    "django_q",
 ]
 
 MIDDLEWARE = [
@@ -157,6 +158,24 @@ logging.config.dictConfig(
 )
 
 
-TAG_MANAGER_ENABLED = env.bool("TAG_MANAGER_ENABLED", True)
+TAG_MANAGER_ENABLED = env.bool("TAG_MANAGER_ENABLED", False)
 if TAG_MANAGER_ENABLED:
     TAG_MANAGER_CONTAINER_ID = env("TAG_MANAGER_CONTAINER_ID")
+
+
+DJANGO_Q_SYNC = env.bool("DJANGO_Q_SYNC", False)
+
+Q_CLUSTER = {
+    "name": "Something",
+    "workers": 1,
+    "max_attempts": 1,
+    "timeout": 60 * 60 * 6,  # 6 hours - Timeout a task after this many seconds
+    "retry": 60 * 60 * 6 + 1,  # 6 hours - Seconds to wait before retrying a task
+    "queue_limit": 1,
+    "bulk": 1,
+    "orm": "default",  # Use Django ORM as storage backend
+    "poll": 10,  # Check for queued tasks this frequently (seconds)
+    "save_limit": 0,
+    "ack_failures": True,  # Dequeue failed tasks
+    "sync": DJANGO_Q_SYNC,
+}
