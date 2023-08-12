@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_extensions",
     "django_q",
+    "adminsortable2",
 ]
 
 MIDDLEWARE = [
