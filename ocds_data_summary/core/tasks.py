@@ -14,22 +14,25 @@ def get_settings():
     # https://stackoverflow.com/a/46263657
     settings_dict = {}
     for setting in dir(kingfisher_settings):
-        if setting.isupper() and setting.isalpha():
+        if setting.isupper():
             settings_dict[setting] = getattr(kingfisher_settings, setting)
     settings_dict.update(
         {
             "DATABASE_URL": settings.DATABASE_URL,
-            "LOG_LEVEL": "INFO",
         }
     )
     return settings_dict
 
 
-def fetch():
+def fetch(from_date=None, until_date=None):
     process = CrawlerProcess(get_settings())
     args = {
         "crawl_time": datetime.now().isoformat()[:18],  # 2023-08-12T12:11:03
         "compile_releases": True,
     }
+    if from_date:
+        args["from_date"] = from_date
+    if until_date:
+        args["until_date"] = until_date
     process.crawl(SouthAfricaNationalTreasuryAPI, **args)
     process.start()

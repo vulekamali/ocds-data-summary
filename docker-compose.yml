@@ -20,7 +20,6 @@ x-common:
     - DJANGO_WHITENOISE_AUTOREFRESH=True
     - TAG_MANAGER_ENABLED=False
 
-
 services:
 
   web:
@@ -32,11 +31,11 @@ services:
   worker:
     <<: *common
     command: ./manage.py qcluster
-   
-  
 
   db:
     image: postgres:12
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=ocds_data_summary
       - POSTGRES_PASSWORD=devpassword
