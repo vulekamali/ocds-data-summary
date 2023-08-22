@@ -180,3 +180,5 @@ Q_CLUSTER = {
     "ack_failures": True,  # Dequeue failed tasks
     "sync": DJANGO_Q_SYNC,
 }
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
