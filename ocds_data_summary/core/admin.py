@@ -1,5 +1,8 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
+from import_export import fields, resources
+from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 
 from ocds_data_summary.core import models
 
@@ -13,8 +16,20 @@ class CategoryAdmin(SortableAdminMixin, admin.ModelAdmin):
     inlines = [EntityInline]
 
 
+class EntityResource(resources.ModelResource):
+    category = fields.Field(
+        column_name='category',
+        attribute='category',
+        widget=ForeignKeyWidget(models.Category, field='label'))
+    class Meta:
+        model = models.Entity
+        fields = ('label', 'category',)
+        import_id_fields = ('label',)
+
+
 @admin.register(models.Entity)
-class EntityAdmin(admin.ModelAdmin):
+class EntityAdmin(ImportExportModelAdmin):
+    resource_classes = [EntityResource]
     list_display = ["label", "category"]
     list_filter = ["category"]
 

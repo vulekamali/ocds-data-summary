@@ -10,7 +10,12 @@ from ocds_data_summary.core.models import Entity, Summary
 
 logger = logging.getLogger(__name__)
 
-summary_template = lambda: defaultdict(int)
+summary_template = lambda: {
+    "has_planning": 0,
+    "has_tender": 0,
+    "has_awards": 0,
+    "has_contracts": 0
+}
 month_template = lambda: defaultdict(summary_template)
 buyer_template = defaultdict(month_template)
 

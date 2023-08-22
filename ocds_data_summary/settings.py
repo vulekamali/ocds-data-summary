@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_q",
     "adminsortable2",
+    "import_export",
 ]
 
 MIDDLEWARE = [

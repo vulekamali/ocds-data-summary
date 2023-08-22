@@ -12,7 +12,7 @@ class Summary(TimeStampedModel):
 
 
 class Category(TimeStampedModel):
-    label = models.CharField(max_length=255)
+    label = models.CharField(max_length=255, unique=True)
     ordering = models.PositiveIntegerField(default=0)
 
     class Meta:
@@ -24,7 +24,7 @@ class Category(TimeStampedModel):
 
 
 class Entity(TimeStampedModel):
-    label = models.CharField(max_length=255)
+    label = models.CharField(max_length=255, unique=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:

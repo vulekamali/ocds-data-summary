@@ -33,6 +33,7 @@ ocdskit = "1.1.7"
 ocdsmerge = "0.6.4"
 pika = "1.2.0"
 rarfile = "3.1"
+django-import-export = "3.2.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
