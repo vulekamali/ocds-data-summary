@@ -10,6 +10,8 @@ class Summary(TimeStampedModel):
         ordering = ["-created"]
         verbose_name_plural = "Summaries"
 
+    def __str__(self):
+        return f"Summary generated at {self.created.isoformat()[:19]}"
 
 class Category(TimeStampedModel):
     label = models.CharField(max_length=255, unique=True)
