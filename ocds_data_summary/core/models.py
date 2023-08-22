@@ -6,7 +6,9 @@ class Summary(TimeStampedModel):
     data = models.JSONField()
     report = models.TextField(blank=True)
 
-    ordering = ["-created"]
+    class Meta:
+        ordering = ["-created"]
+        verbose_name_plural = "Summaries"
 
 
 class Category(TimeStampedModel):

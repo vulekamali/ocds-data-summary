@@ -15,8 +15,6 @@ month_template = lambda: defaultdict(summary_template)
 buyer_template = defaultdict(month_template)
 
 
-
-
 def earliest_date(release) -> Optional[str]:
     date = release.get("tender", {}).get("tenderPeriod", {}).get("startDate", None)
     if not date:
@@ -24,7 +22,9 @@ def earliest_date(release) -> Optional[str]:
         if award_dates:
             date = min(*award_dates)
     if not date:
-        contract_dates = any(a.get("dateSigned", None) for a in release.get("contracts", []))
+        contract_dates = any(
+            a.get("dateSigned", None) for a in release.get("contracts", [])
+        )
         if contract_dates:
             date = min(*contract_dates)
     return date
@@ -36,23 +36,35 @@ def make_month_key(date: str) -> str:
 
 def summarise():
     buyers = buyer_template
+    total_releases = 0
+    skipped = 0
+    counted = 0
+    no_buyer = 0
+    no_date = 0
 
     with connection.cursor() as cursor:
         cursor.execute("select data from south_africa_national_treasury_api")
         for row in cursor.fetchall():
             release = loads(row[0])
+            total_releases += 1
 
             date = earliest_date(release)
             if not date:
-                logger.info("Dropping release with no date.")
+                logger.info(f'Dropping release with no date. ocid={release.get("ocid")}')
+                no_date += 1
+                skipped += 1
                 continue
             month_key = make_month_key(date)
 
             buyer = release.get("buyer", {}).get("name", None)
             if not buyer:
-                logger.info("Dropping release with no buyer.")
+                logger.info(f'Dropping release with no buyer. ocid={release.get("ocid")}')
+                no_buyer += 1
+                skipped += 1
                 continue
-                
+
+            counted += 1
+
             if release.get("tender", None):
                 buyers[buyer][month_key]["has_tender"] += 1
             if release.get("planning", None):
@@ -63,8 +75,7 @@ def summarise():
                 buyers[buyer][month_key]["has_awards"] += 1
 
     buyer_to_category = {
-        buyer.label: buyer.category.label
-        for buyer in Entity.objects.all()
+        buyer.label: buyer.category.label for buyer in Entity.objects.all()
     }
 
     summaries = []
@@ -74,19 +85,24 @@ def summarise():
             category_label = buyer_to_category.get(buyer_name, None)
             if category_label is None:
                 ungrouped_buyers.add(buyer_name)
-            summary.update({
-                "buyer_name": buyer_name,
-                "tender_year_month": month_key,
-                "category": category_label
-            })
+            summary.update(
+                {
+                    "buyer_name": buyer_name,
+                    "tender_year_month": month_key,
+                    "category": category_label,
+                }
+            )
             summaries.append(summary)
 
-    report = ""
+    report = f"Total releases: {total_releases}, skipped: {skipped}, counted: {counted}\n\n"
+
+    if no_buyer:
+        report += f"Number of releases skipped because no buyer: {no_buyer}\n"
+    if no_date:
+        report += f"Number of releases skipped because no tender date: {no_date}\n"
+
     if ungrouped_buyers:
-        (
-            "Buyers not in any group:\n"
-            "------------------------\n"
-        )
+        report += "\nBuyers not in any group:\n------------------------\n"
         report += "\n".join(sorted(ungrouped_buyers))
 
     Summary.objects.create(data=summaries, report=report)
