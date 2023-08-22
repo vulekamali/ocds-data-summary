@@ -4,6 +4,9 @@ from django_extensions.db.models import TimeStampedModel
 
 class Summary(TimeStampedModel):
     data = models.JSONField()
+    report = models.TextField(blank=True)
+
+    ordering = ["-created"]
 
 
 class Category(TimeStampedModel):
