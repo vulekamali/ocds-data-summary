@@ -8,13 +8,23 @@ class Summary(TimeStampedModel):
 
 class Category(TimeStampedModel):
     label = models.CharField(max_length=255)
-
-    my_order = models.PositiveIntegerField(default=0)
+    ordering = models.PositiveIntegerField(default=0)
 
     class Meta:
-        ordering = ["my_order"]
+        ordering = ["ordering"]
+        verbose_name_plural = "Categories"
+
+    def __str__(self):
+        return self.label
 
 
 class Entity(TimeStampedModel):
     label = models.CharField(max_length=255)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ["label"]
+        verbose_name_plural = "Entities"
+
+    def __str__(self):
+        return self.label
