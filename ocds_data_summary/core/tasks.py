@@ -6,6 +6,7 @@ from kingfisher_scrapy.spiders.south_africa_national_treasury_api import (
 from kingfisher_scrapy import settings as kingfisher_settings
 from datetime import datetime
 from typing import Dict, Any
+from constance import config
 
 from ocds_data_summary import settings
 from ocds_data_summary.core.models import FetchReport
@@ -28,7 +29,7 @@ def get_settings():
 def fetch(from_date=None, until_date=None):
     process = CrawlerProcess(get_settings())
     args = {
-        "crawl_time": datetime.now().isoformat()[:18],  # 2023-08-12T12:11:03
+        "crawl_time": config.INITIAL_CRAWL_TIME.isoformat()[:19],
         "compile_releases": True,
     }
     if from_date:

@@ -4,6 +4,7 @@ from collections import defaultdict
 from typing import Optional
 import logging
 from pprint import pprint
+from constance import config
 
 from ocds_data_summary.core.models import Entity, OCDSSummary, FetchReport
 
@@ -84,12 +85,14 @@ def summarise():
     }
 
     summaries = []
+    # Track ungrouped buyers to be able to log for admins to easily find and categorise uncategorised buyers
     ungrouped_buyers = set()
     for buyer_name, months in buyers.items():
         for month_key, summary in months.items():
             category_label = buyer_to_category.get(buyer_name, None)
             if category_label is None:
                 ungrouped_buyers.add(buyer_name)
+                category_label = config.DEFAULT_GROUP_NAME
             summary.update(
                 {
                     "buyer_name": buyer_name,

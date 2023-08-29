@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import environ
+from datetime import datetime
 
 ROOT_DIR = environ.Path(__file__) - 2
 PROJ_DIR = ROOT_DIR.path("ocds_data_summary")
@@ -37,6 +38,8 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "constance",
+    "constance.backends.database",
     "whitenoise.runserver_nostatic",
     "ocds_data_summary.core.apps.CoreConfig",
     "django.contrib.admin",
@@ -168,7 +171,7 @@ if TAG_MANAGER_ENABLED:
 DJANGO_Q_SYNC = env.bool("DJANGO_Q_SYNC", False)
 
 Q_CLUSTER = {
-    "name": "Something",
+    "name": "OCDS summary queue",
     "workers": 1,
     "max_attempts": 1,
     "timeout": 60 * 60 * 6,  # 6 hours - Timeout a task after this many seconds
@@ -183,3 +186,18 @@ Q_CLUSTER = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+
+CONSTANCE_CONFIG = {
+    "DEFAULT_GROUP_NAME": (
+        "Other entities",
+        "The group name used for any buyers who are not categorised into specific groups.",
+        str,
+    ),
+    "INITIAL_CRAWL_TIME": (
+        datetime(2023, 8, 21, 18, 20, 2),
+        "The initial crawl time used as the starting point for incrementally fetching data from the OCDS API",
+        datetime
+    )
+}
