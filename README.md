@@ -4,17 +4,10 @@
 OCDS data summary
 ===============================
 
+This is the backend for the Vulekamali and OCPO OCDS data availability summary.
 
-Complete project setup
-----------------------
-
-- [x] Initialise a git repository in this directory
-  - [x] Explicitly add directories needed for collectstatic to work: `git add -f staticfiles/.gitkeep ocds_data_summary/static/.gitkeep`
-- [ ] Create a repository on [GitHub](https://github.com/OpenUpSA) and add as a remote to this repository
-  - e.g. `git remote add origin git@github.com:OpenUpSA/ocds_data_summary.git`
-- [ ] Enable Continuous Integration checks for the GitHub Repository at [travis-ci.org](https://travis-ci.org)
-  - [ ] Enable periodic builds, e.g. weekly, to detect when dependency changes break your builds before they hurt you.
-- [ ] Clean up this checklist - your project is set up now and you don't need it any more.
+It fetches data from the OCPO OCDS API, and produces a summary of the available OCDS data
+which can be accessed via its API.
 
 
 Project Layout
@@ -40,7 +33,7 @@ Dependencies are managed via poetry in the docker container.
 
 Add and lock dependencies in a temporary container:
 
-    docker-compose run --rm web poetry add pkgname==1.2.3
+    docker-compose run --rm -u0 web poetry add pkgname==1.2.3
 
 Rebuild the image to contain the new dependencies:
 
@@ -49,24 +42,8 @@ Rebuild the image to contain the new dependencies:
 Make sure to commit updates to pyproject.toml and poetry.lock to git
 
 
-### Javascript and CSS
-
-JS and CSS are bundled using [parcel](https://parceljs.org/) - see `package.json`.
-
-Dependencies are managed via `yarn`, e.g.
-
-    docker-compose run --rm web yarn add bootstrap@4.x
-
-Make sure to commit updates to package.json and yarn.lock to git.
-
-
 Development setup
 -----------------
-
-In one shell, run the frontend asset builder
-
-    docker-compose run --rm web yarn dev
-
 
 In another shell, initialise and run the django app
 
@@ -74,6 +51,9 @@ In another shell, initialise and run the django app
     docker-compose run --rm web python manage.py migrate
     docker-compose up
 
+This will start the web and app containers. The web container automatically reloads
+Python code changes. The worker app does not, and has to be restarted for it to run
+the modified code.
 
 If you need to destroy and recreate your dev setup, e.g. if you've messed up your
 database data or want to switch to a branch with an incompatible database schema,
