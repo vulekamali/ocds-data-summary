@@ -65,7 +65,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "ocds_data_summary.urls"
+ROOT_URLCONF = "ocds_data_summary.core.urls"
 
 TEMPLATES = [
     {
