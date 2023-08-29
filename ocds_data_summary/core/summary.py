@@ -5,7 +5,7 @@ from typing import Optional
 import logging
 from pprint import pprint
 
-from ocds_data_summary.core.models import Entity, Summary
+from ocds_data_summary.core.models import Entity, OCDSSummary, FetchReport
 
 
 logger = logging.getLogger(__name__)
@@ -110,4 +110,9 @@ def summarise():
         report += "\nBuyers not in any group:\n------------------------\n"
         report += "\n".join(sorted(ungrouped_buyers))
 
-    Summary.objects.create(data=summaries, report=report)
+    summary = {
+        "last_fetched": FetchReport.objects.all().order_by("-created")[0].created.isoformat(),
+        "months": summaries
+    }
+
+    OCDSSummary.objects.create(data=summary, report=report)

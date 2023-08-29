@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Dict, Any
 
 from ocds_data_summary import settings
+from ocds_data_summary.core.models import FetchReport
 
 
 def get_settings():
@@ -34,5 +35,11 @@ def fetch(from_date=None, until_date=None):
         args["from_date"] = from_date
     if until_date:
         args["until_date"] = until_date
-    process.crawl(SouthAfricaNationalTreasuryAPI, **args)
+    crawler = process.create_crawler(SouthAfricaNationalTreasuryAPI)
+    process.crawl(crawler, **args)
     process.start()
+    stats = crawler.stats.get_stats()
+    stats_str = ""
+    for key in sorted(stats.keys()):
+        stats_str += f"{key}: {str(stats[key])}\n"
+    FetchReport.objects.create(stats=stats_str)

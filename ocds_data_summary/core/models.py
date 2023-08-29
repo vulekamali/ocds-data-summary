@@ -2,16 +2,26 @@ from django.db import models
 from django_extensions.db.models import TimeStampedModel
 
 
-class Summary(TimeStampedModel):
+class OCDSSummary(TimeStampedModel):
     data = models.JSONField()
     report = models.TextField(blank=True)
 
     class Meta:
         ordering = ["-created"]
-        verbose_name_plural = "Summaries"
+        verbose_name = "OCDS Summary"
+        verbose_name_plural = "OCDS Summaries"
 
     def __str__(self):
         return f"Summary generated at {self.created.isoformat()[:19]}"
+
+
+class FetchReport(TimeStampedModel):
+    stats = models.TextField()
+
+    class Meta:
+        ordering = ["-created"]
+        verbose_name_plural = "Fetch Reports"
+
 
 class Category(TimeStampedModel):
     label = models.CharField(max_length=255, unique=True)
