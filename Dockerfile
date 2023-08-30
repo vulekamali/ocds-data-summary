@@ -8,11 +8,12 @@ ENV NODE_ENV production
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE DontWarn
 
 RUN set -ex; \
-  apt-get update; \
+  apt install -y --no-install-recommends ca-certificates; \
+  apt update; \
   # psycopg2 dependencies \
-  apt-get install -y libpq-dev; \
+  apt install -y libpq-dev; \
   # git for codecov file listing \
-  apt-get install -y git; \
+  apt install -y git; \
   # cleaning up unused files \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
   rm -rf /var/lib/apt/lists/*
