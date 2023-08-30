@@ -1,4 +1,4 @@
-FROM python:3.10-bookworm
+FROM python:3.10-bullseye
 
 ENV POETRY_VIRTUALENVS_CREATE false
 ENV PIP_NO_CACHE_DIR off
