@@ -1,4 +1,4 @@
-FROM python:3.10
+FROM python:3.10-bookworm
 
 ENV POETRY_VIRTUALENVS_CREATE false
 ENV PIP_NO_CACHE_DIR off
@@ -8,12 +8,11 @@ ENV NODE_ENV production
 ENV APT_KEY_DONT_WARN_ON_DANGEROUS_USAGE DontWarn
 
 RUN set -ex; \
-  apt install -y --no-install-recommends ca-certificates; \
-  apt update; \
+  apt-get update; \
   # psycopg2 dependencies \
-  apt install -y libpq-dev; \
+  apt-get install -y libpq-dev; \
   # git for codecov file listing \
-  apt install -y git; \
+  apt-get install -y git; \
   # cleaning up unused files \
   apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
   rm -rf /var/lib/apt/lists/*
