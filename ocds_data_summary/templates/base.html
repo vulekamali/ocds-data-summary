@@ -25,7 +25,6 @@
     <meta property="og:description" content="{% block og_description %}Summarise the data available in an Open Contracting Data Standard API{% endblock %}" />
     {% endblock %}
 
-    <link rel="stylesheet" href="{% static "scss/ocds_data_summary.css" %}">
   </head>
   <body>
     {% if TAG_MANAGER_ENABLED %} 
@@ -37,6 +36,5 @@
 
     {% block content %}{% endblock %}
 
-    <script src="{% static "js/ocds_data_summary.js" %}" async></script>
   </body>
 </html>
