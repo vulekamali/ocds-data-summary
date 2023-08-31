@@ -30,7 +30,7 @@ def fetch(from_date=None, until_date=None):
     process = CrawlerProcess(get_settings())
     args = {
         "crawl_time": config.INITIAL_CRAWL_TIME.isoformat()[:19],
-        "compile_releases": True,
+        "compile_releases": "true",
     }
     if from_date:
         args["from_date"] = from_date
