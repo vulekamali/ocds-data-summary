@@ -44,3 +44,10 @@ def fetch(from_date=None, until_date=None):
     for key in sorted(stats.keys()):
         stats_str += f"{key}: {str(stats[key])}\n"
     FetchReport.objects.create(stats=stats_str)
+
+
+def full_update():
+    """Fetch latest data and then summarise, ensuring the latest changes are
+    included in the summary."""
+    fetch()
+    summarise()
