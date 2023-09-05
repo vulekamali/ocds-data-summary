@@ -203,3 +203,5 @@ CONSTANCE_CONFIG = {
         datetime
     )
 }
+
+CORS_ALLOWED_ORIGINS = ["*"]
