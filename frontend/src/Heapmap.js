@@ -185,7 +185,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
 
             return () => console.log("cleanup function");
         },
-        [width, data, rowKey, colKey, valKey]
+        [width, data, rowKey, colKey, valKey, legendHeight]
     );
 
     const addLegend = (container, myColor, range) => {
