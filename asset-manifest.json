@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ocds-data-summary/static/css/main.14ce1b63.css",
+    "main.js": "/ocds-data-summary/static/js/main.b6d742b7.js",
+    "static/js/787.510e7a3c.chunk.js": "/ocds-data-summary/static/js/787.510e7a3c.chunk.js",
+    "index.html": "/ocds-data-summary/index.html",
+    "main.14ce1b63.css.map": "/ocds-data-summary/static/css/main.14ce1b63.css.map",
+    "main.b6d742b7.js.map": "/ocds-data-summary/static/js/main.b6d742b7.js.map",
+    "787.510e7a3c.chunk.js.map": "/ocds-data-summary/static/js/787.510e7a3c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.14ce1b63.css",
+    "static/js/main.b6d742b7.js"
+  ]
+}
