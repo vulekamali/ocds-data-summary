@@ -16,7 +16,6 @@ django-extensions = "^3.2.3"
 pytest-cov = "^2.10.1"
 html5lib = "^1.1"
 gunicorn = "^21.2.0"
-django-q = "^1.3.9"
 django-admin-sortable2 = "1.0.4"
 kingfisher-scrapy = {git = "https://github.com/vulekamali/kingfisher-collect.git", rev = "6367a98"}
 # kingfisher-scrapy deps:

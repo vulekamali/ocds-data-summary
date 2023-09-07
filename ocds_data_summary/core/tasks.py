@@ -8,7 +8,7 @@ from datetime import datetime
 from typing import Dict, Any
 from constance import config
 
-from ocds_data_summary import settings
+from django.conf import settings
 from ocds_data_summary.core.models import FetchReport
 
 
@@ -29,7 +29,7 @@ def get_settings():
 def fetch(from_date=None, until_date=None):
     process = CrawlerProcess(get_settings())
     args = {
-        "crawl_time": config.INITIAL_CRAWL_TIME.isoformat()[:19],
+        "crawl_time": settings.INITIAL_CRAWL_TIME,
         "compile_releases": "true",
     }
     if from_date:

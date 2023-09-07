@@ -33,7 +33,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 # Rely on nginx to direct only allowed hosts, allow all for dokku checks to work.
 ALLOWED_HOSTS = ["*"]
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_extensions",
-    "django_q",
     "adminsortable2",
     "import_export",
     "corsheaders",
@@ -170,23 +169,6 @@ if TAG_MANAGER_ENABLED:
     TAG_MANAGER_CONTAINER_ID = env("TAG_MANAGER_CONTAINER_ID")
 
 
-DJANGO_Q_SYNC = env.bool("DJANGO_Q_SYNC", False)
-
-Q_CLUSTER = {
-    "name": "OCDS summary queue",
-    "workers": 1,
-    "max_attempts": 1,
-    "timeout": 60 * 60 * 6,  # 6 hours - Timeout a task after this many seconds
-    "retry": 60 * 60 * 6 + 1,  # 6 hours - Seconds to wait before retrying a task
-    "queue_limit": 1,
-    "bulk": 1,
-    "orm": "default",  # Use Django ORM as storage backend
-    "poll": 10,  # Check for queued tasks this frequently (seconds)
-    "save_limit": 0,
-    "ack_failures": True,  # Dequeue failed tasks
-    "sync": DJANGO_Q_SYNC,
-}
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
@@ -197,11 +179,7 @@ CONSTANCE_CONFIG = {
         "The group name used for any buyers who are not categorised into specific groups.",
         str,
     ),
-    "INITIAL_CRAWL_TIME": (
-        datetime(2023, 8, 21, 18, 20, 2),
-        "The initial crawl time used as the starting point for incrementally fetching data from the OCDS API",
-        datetime
-    )
 }
 
-CORS_ALLOWED_ORIGINS = ["*"]
+# This is importantly an ISO format date up to the second, no more no less.
+INITIAL_CRAWL_TIME = env.str("INITIAL_CRAWL_TIME", "2023-08-21T18:20:02")

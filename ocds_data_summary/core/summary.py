@@ -6,7 +6,7 @@ import logging
 from pprint import pprint
 from constance import config
 
-from ocds_data_summary.core.models import Entity, OCDSSummary, FetchReport
+from ocds_data_summary.core.models import Entity, Category, OCDSSummary, FetchReport
 
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,8 @@ summary_template = lambda: {
     "has_planning": 0,
     "has_tender": 0,
     "has_awards": 0,
-    "has_contracts": 0
+    "has_contracts": 0,
+    "total_count": 0,
 }
 month_template = lambda: defaultdict(summary_template)
 buyer_template = defaultdict(month_template)
@@ -71,6 +72,7 @@ def summarise():
 
             counted += 1
 
+            buyers[buyer][month_key]["total_count"] += 1
             if release.get("tender", None):
                 buyers[buyer][month_key]["has_tender"] += 1
             if release.get("planning", None):
@@ -115,7 +117,9 @@ def summarise():
 
     summary = {
         "last_fetched": FetchReport.objects.all().order_by("-created")[0].created.isoformat(),
-        "months": summaries
+        "months": summaries,
+        # Array of category labels for ordering, with default group name at the end.
+        "groups": [c.label for c in Category.objects.all()] + [config.DEFAULT_GROUP_NAME],
     }
 
     OCDSSummary.objects.create(data=summary, report=report)
