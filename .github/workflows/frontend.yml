@@ -49,6 +49,9 @@ jobs:
 
   # Deployment job
   deploy:
+    defaults:
+      run:
+        working-directory: ./frontend
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
