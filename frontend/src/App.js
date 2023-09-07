@@ -49,8 +49,8 @@ function App() {
         <p>Last updated 2023-03-25 13:14:19</p>
         {categoryResults == null ? <Loading /> : (
           <>
-            {categoryResults.map(category =>
-              <Section key={category.label} heading={category.label} data={category.items} />
+            {categoryResults.map((category, i) =>
+              <Section key={category.label} heading={category.label} data={category.items} marginTop={i > 0 && 200}/>
             )}
           </>
         )}
@@ -64,7 +64,7 @@ function Section({ heading, data, marginTop }) {
     <h2
       style={{ marginTop: marginTop }}
     >{heading}</h2>
-    <Heatmap data={data} rowKey="buyer_name" colKey="tender_year_month" valKey="count" />
+    <Heatmap data={data} rowKey="buyer_name" colKey="tender_year_month" valKey="total_count" />
   </>
 }
 
