@@ -8,6 +8,7 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { fontWeight } from '@mui/system';
 
 function Loading() {
   return (
@@ -52,51 +53,53 @@ function App() {
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" >
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, padding: "12px" }}>
-            OCPO Open Contracting data availability
+          <Typography component="h1" sx={{ flexGrow: 1, padding: "12px", fontSize: "18px"}}>
+            OCPO Open Contracting data
           </Typography>
         </AppBar>
       </Box>
-      <div className="pageContent">
-        <div className="description">
-          <p>This shows the number of procurement processes initiated by each organ of state each month according to the <a
-            href="https://data.etenders.gov.za/">OCPO Open Contracting Data Standard API</a></p>
+      <div className="description" style={{"padding": "8px 12px 0px 12px"}}>
+        <p>This shows the number of procurement processes initiated by each organ of state each month according to the <a
+          href="https://data.etenders.gov.za/">OCPO Open Contracting Data Standard API</a></p>
 
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography>How to interpret this</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Typography>
-                <p>Blocks can be blank either because no procurement took place in that period, or because data has not been uploaded for that period yet.</p>
-                <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
-              </Typography>
-            </AccordionDetails>
-          </Accordion>
+        <Accordion>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography>How to interpret this</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography>
+              <p>Blocks can be blank either because no procurement took place in that period, or because data has not been uploaded for that period yet.</p>
+              <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
+            </Typography>
+          </AccordionDetails>
+        </Accordion>
 
-          <p>Last updated: {lastUpdated == null ? "loading..." : lastUpdated.slice(0, 16)}</p>
-        </div>
-        {categoryResults == null ? <Loading /> : (
-          <>
-            {categoryResults.map((category, i) =>
-              <Section key={category.label} heading={category.label} data={category.items} marginTop={i > 0 && 200} />
-            )}
-          </>
-        )}
+        <p>Last updated: {lastUpdated == null ? "loading..." : lastUpdated.slice(0, 16)}</p>
       </div>
+      {categoryResults == null ? <Loading /> : (
+        <>
+          {categoryResults.map((category, i) =>
+            <Section key={category.label} heading={category.label} data={category.items}  />
+          )}
+        </>
+      )}
     </div >
   );
 }
 
-function Section({ heading, data, marginTop }) {
+function Section({ heading, data }) {
   return <>
-    <h2
-      style={{ marginTop: marginTop }}
-    >{heading}</h2>
+    <Typography component="h2" sx={{
+      fontSize: "15px",
+      fontWeight: "600",
+      paddingX: "12px"
+    }}>
+      {heading}
+    </Typography>
     <Heatmap data={data} rowKey="buyer_name" colKey="tender_year_month" valKey="total_count" />
   </>
 }

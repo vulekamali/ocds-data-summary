@@ -1,8 +1,3 @@
-.pageContent {
-    padding-left: 12px;
-    padding-right: 12px;
-}
-
 
 .container {
     position: relative;
@@ -21,17 +16,31 @@
     position: absolute;
     top: 0px;
     left: 0px;
+    z-index: 20; /* above horizontalScrollContainer */
+    pointer-events: none;
 }
 
 .wrap-and-truncate {
     word-wrap: break-word;
-    text-align: right;
     margin-top: 0px;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     display: -webkit-box;
     padding-right: 10px;
+}
+
+.yLabel {
+    color: white;
+    font-size: 12px;
+}
+
+.yLabelContainer {
+    background-color: black;
+    opacity: 63%;
+    padding: 3px;
+    border-radius: 2px;
+    display: inline-block;
 }
 
 .legend-container {

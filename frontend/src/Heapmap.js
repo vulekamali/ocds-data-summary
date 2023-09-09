@@ -1,8 +1,8 @@
 import React from 'react';
 import * as d3 from 'd3';
-import {ScrollSync, ScrollSyncPane} from 'react-scroll-sync';
+import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 
-export default function Heatmap({data, rowKey, colKey, valKey}) {
+export default function Heatmap({ data, rowKey, colKey, valKey }) {
     const [width, setWidth] = React.useState(0);
     const [legendHeight] = React.useState(100);
 
@@ -52,10 +52,10 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
             const plotHeight = rows.length * squareSize;
             const yAxisWidth = width > 600 ? 170 : width / 3;
             const xAxisHeight = 20;
-            const margin = 30,
-                scrollContainerWidth = width - 2 * margin - yAxisWidth,
-                height = plotHeight + margin * 2 + xAxisHeight * 2;
             const legendContainerHeight = 100;
+            const margin = 30,
+                scrollContainerWidth = width - 2 * margin,
+                height = plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
 
 
             container.style("height", `${height}px`);
@@ -65,7 +65,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
             const svg = d3.select(horizontalScrollContainerEl)
                 .style("width", `${scrollContainerWidth}px`)
                 .style("height", `${plotHeight + xAxisHeight + margin}px`)
-                .style("left", `${yAxisWidth + margin + 1}px`)
+                .style("left", `${margin + 1}px`)
                 .select("svg.main")
                 .attr("width", plotWidth)
                 .attr("height", plotHeight + xAxisHeight)
@@ -88,7 +88,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
             container.select(".stickyXAxisContainer")
                 .style("top", `0px`)
                 .style("width", `${scrollContainerWidth}px`)
-                .style("left", `${yAxisWidth + margin + 1 + 20}px`)
+                .style("left", `${margin + 1 + 20}px`)
                 .select("svg")
                 .attr("width", plotWidth)
                 .attr("height", xAxisHeight + margin)
@@ -119,24 +119,31 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
                 .padding(0.05);
             container.select(".yAxisContainer")
                 .select("svg")
-                .attr("width", margin + yAxisWidth + 2)
+                .attr("width", width)
                 .attr("height", height)
                 .style("position", "relative")
                 .style("top", `${xAxisHeight + margin + legendHeight}px`)
                 .select(".y-axis")
-                .call(d3.axisLeft(y))
-                .attr("transform", `translate(${margin + yAxisWidth}, 0)`);
-            container.select(".yAxisContainer")
-                .selectAll('text')
-                .each(function (textValue, i) {
-                    replaceTextElements(this, textValue, yAxisWidth);
-                });
-            container.select(".yAxisContainer")
                 .selectAll('foreignObject')
-                .each((function () {
-                    updateForeignObject(d3.select(this), yAxisWidth);
-                }));
-
+                .data(rows)
+                .join((enter) => {
+                    console.log(enter, width)
+                    enter.append("foreignObject")
+                        .attr("x", "0")
+                        .attr("y", (row) => y(row))
+                        .attr("width", width + "px")
+                        .attr("height", "30px")
+                        .append("xhtml:div")
+                        .attr("class", "yLabelContainer")
+                        .append("span")
+                        .attr("class", "yLabel")
+                        .text((row) => row);
+                },
+                (update) => {
+                    container.select(".yAxisContainer")
+                    .selectAll('foreignObject')
+                    .attr("width", width + "px");
+                })
             const values = data.map((d) => d[valKey]);
             const min = d3.min(values);
             const max = d3.max(values);
@@ -157,7 +164,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
             var mousemove = function (e, d) {
                 tooltip
                     .html(`${d[rowKey]}<br>${d[colKey]}<br><b>${d[valKey]}`)
-                    .style("left", `${xBand(d.date) + margin + yAxisWidth + 0.5 * squareSize - horizontalScrollContainerEl.scrollLeft}px`)
+                    .style("left", `${xBand(d.date) + margin + 0.5 * squareSize - horizontalScrollContainerEl.scrollLeft}px`)
                     .style("top", (y(d[rowKey]) - (0.33 * squareSize) + legendContainerHeight) + "px");
             };
             var mouseleave = function (e, d) {
@@ -200,7 +207,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
         }
 
         // Add one dot in the legend for each name.
-        const size = {height: 20, width: 50}
+        const size = { height: 20, width: 50 }
         legendContainer.selectAll("mydots")
             .data(legendVals)
             .enter()
@@ -233,20 +240,14 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
             .style("alignment-baseline", "middle");
 
         legendContainer.append("text")
-        .attr("x", 40)
-        .attr("y", 30)
-        .text("Number of procurement processes");
+            .attr("x", 40)
+            .attr("y", 30)
+            .text("Number of procurement processes");
     }
 
     return (
         <div ref={ref} className="container">
-            <svg className="legend-container" style={{height: legendHeight}}></svg>
-
-            <div className='yAxisContainer'>
-                <svg>
-                    <g className="y-axis"/>
-                </svg>
-            </div>
+            <svg className="legend-container" style={{ height: legendHeight }}></svg>
             <ScrollSync>
                 <>
                     <div className="stickyXAxisContainer">
@@ -254,7 +255,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
                             <div className='horizontalScrollXAxisContainer'>
                                 <svg>
                                     <rect className='background'></rect>
-                                    <g className="x-axis top"/>
+                                    <g className="x-axis top" />
                                 </svg>
                             </div>
                         </ScrollSyncPane>
@@ -262,13 +263,18 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
                     <ScrollSyncPane>
                         <div className="horizontalScrollContainer">
                             <svg className="main">
-                                <g className="plot-area"/>
-                                <g className="x-axis bottom"/>
+                                <g className="plot-area" />
+                                <g className="x-axis bottom" />
                             </svg>
                         </div>
                     </ScrollSyncPane>
                 </>
             </ScrollSync>
+            <div className='yAxisContainer'>
+                <svg>
+                    <g className="y-axis" />
+                </svg>
+            </div>
             <div className="tooltip"></div>
         </div>
     );
@@ -277,10 +283,7 @@ export default function Heatmap({data, rowKey, colKey, valKey}) {
 const replaceTextElements = function (textElement, textValue) {
     const el = d3.select(textElement);
     const p = d3.select(textElement.parentNode);
-    const foreignObject = p.append("foreignObject");
-    foreignObject.append("xhtml:p")
-        .attr("class", "wrap-and-truncate")
-        .html(textValue);
+
     el.remove();
 };
 
