@@ -1,6 +1,8 @@
-body {
-    padding: 20px
+.pageContent {
+    padding-left: 12px;
+    padding-right: 12px;
 }
+
 
 .container {
     position: relative;

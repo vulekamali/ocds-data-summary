@@ -1,6 +1,13 @@
 import './App.css';
 import Heatmap from './Heapmap';
 import React, { useEffect } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function Loading() {
   return (
@@ -10,45 +17,69 @@ function Loading() {
 
 function App() {
   const [categoryResults, setCategoryResults] = React.useState(null);
+  const [lastUpdated, setLastUpdated] = React.useState(null);
+  const url = "https://ocds-summary-backend.vulekamali.gov.za/api/summary/latest";
 
-  useEffect(() => {
-    if (categoryResults == null) {
-      const url = "https://ocds-summary-backend.vulekamali.gov.za/api/summary/latest";
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const categoryLabels = data.groups;
-          const groupedObj = data.months.reduce((accumulator, value) => {
-            if (accumulator[value.category] === undefined)
-              accumulator[value.category] = [];
-            accumulator[value.category].push(value);
-            return accumulator;
-          }, {});
+  const loadData = () => {
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        setLastUpdated(data.last_fetched);
+        const categoryLabels = data.groups;
+        const groupedObj = data.months.reduce((accumulator, value) => {
+          if (accumulator[value.category] === undefined)
+            accumulator[value.category] = [];
+          accumulator[value.category].push(value);
+          return accumulator;
+        }, {});
 
-          const groupedArr = categoryLabels.map(label => {
-            return {
-              "label": label,
-              "items": groupedObj[label],
-            }
-          })
-          setCategoryResults(groupedArr);
+        const groupedArr = categoryLabels.map(label => {
+          return {
+            "label": label,
+            "items": groupedObj[label],
+          }
         })
-        .catch((error) => {
-          console.log(error)
-          alert(error)
-        });
-    }
-  });
+        setCategoryResults(groupedArr);
+      })
+      .catch((error) => {
+        console.log(error)
+        alert(error)
+      });
+  };
+  useEffect(() => loadData, [url]);
 
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>OCPO Open Contracting data availability</h1>
-        <p>This shows the number of procurement processes available for each organ of state by month at <a
-          href="https://data.etenders.gov.za/">https://data.etenders.gov.za/</a></p>
-        <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries
-          should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
-        <p>Last updated 2023-03-25 13:14:19</p>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static" >
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, padding: "12px" }}>
+            OCPO Open Contracting data availability
+          </Typography>
+        </AppBar>
+      </Box>
+      <div className="pageContent">
+        <div className="description">
+          <p>This shows the number of procurement processes initiated by each organ of state each month according to the <a
+            href="https://data.etenders.gov.za/">OCPO Open Contracting Data Standard API</a></p>
+
+          <Accordion>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="panel1a-content"
+              id="panel1a-header"
+            >
+              <Typography>How to interpret this</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                <p>Blocks can be blank either because no procurement took place in that period, or because data has not been uploaded for that period yet.</p>
+                <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+
+          <p>Last updated: {lastUpdated == null ? "loading..." : lastUpdated.slice(0, 16)}</p>
+        </div>
         {categoryResults == null ? <Loading /> : (
           <>
             {categoryResults.map((category, i) =>
@@ -56,7 +87,7 @@ function App() {
             )}
           </>
         )}
-      </header>
+      </div>
     </div >
   );
 }
