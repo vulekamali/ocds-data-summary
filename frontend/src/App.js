@@ -52,7 +52,7 @@ function App() {
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static" sx={{bgcolor: "white", color: "black", boxShadow: "unset"}}>
-          <Typography component="h1" sx={{ flexGrow: 1, padding: "12px", fontSize: "18px"}}>
+          <Typography component="h1" sx={{ flexGrow: 1, padding: "12px", fontSize: "18px", "fontWeight": "800"}}>
             OCPO Open Contracting data
           </Typography>
         </AppBar>

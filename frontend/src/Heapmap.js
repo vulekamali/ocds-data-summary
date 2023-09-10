@@ -62,6 +62,9 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
             const minColor = "#f3eae0";
             const maxColor = "#AB5600";
 
+            const tooltipWidth = 150;
+            const tooltipHeight = 108;
+
             container.style("height", `${height}px`);
 
             const horizontalScrollContainerEl = container.select(".horizontalScrollContainer").node();
@@ -99,7 +102,9 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 .attr("transform", `translate(0, ${xAxisHeight - 2 + margin})`)
                 .call(d3.axisTop(xBand)
                     .tickFormat(xAxisTickFormat)
-                );
+                )
+                .select("path.domain")
+                .style("display", "none");
             container.select(".horizontalScrollXAxisContainer")
                 .select("svg")
                 .select("rect.background")
@@ -155,20 +160,42 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
 
             // create a tooltip
             var tooltip = container.select(".tooltip")
-
+                .style("height", `${tooltipHeight}px`)
+                .style("width", `${tooltipWidth}px`);
+            var tooltipArrow = container.select(".tooltipArrow");
 
             // Three function that change the tooltip when user hover / move / leave a cell
             var mouseover = function (e, d) {
                 tooltip.style("display", "block")
+                tooltipArrow.style("display", "block")
             };
             var mousemove = function (e, d) {
                 tooltip
-                    .html(`${d[rowKey]}<br>${d[colKey]}<br><b>${d[valKey]}`)
-                    .style("left", `${xBand(d.date) + margin + 0.5 * squareSize - horizontalScrollContainerEl.scrollLeft}px`)
-                    .style("top", (y(d[rowKey]) - (0.33 * squareSize) + legendContainerHeight) + "px");
+                    .html(
+                        `<div class="titleRow"><div class="date">${d[colKey]}</div><div class="total">${d[valKey]} items</div></div>` +
+                        `<div class="name">${d[rowKey]}</div>` +
+                        `<div class="subTotalRow"><div class="date">Has planning</div><div class="total">${d["has_planning"]}</div></div>` +
+                        `<div class="subTotalRow"><div class="date">Has tender</div><div class="total">${d["has_tender"]}</div></div>` +
+                        `<div class="subTotalRow"><div class="date">Has awards</div><div class="total">${d["has_awards"]}</div></div>` +
+                        `<div class="subTotalRow"><div class="date">Has contracts</div><div class="total">${d["has_contracts"]}</div></div>`
+                    )
+                    .style("left", () => {
+                        const left = xBand(d.date) + margin - horizontalScrollContainerEl.scrollLeft;
+                        console.log(width, left, tooltipWidth);
+                        if (left + tooltipWidth + 16 > width)
+                            return `${width - tooltipWidth - 16}px`;
+                        else
+                            return `${left}px`;
+                    })
+                    .style("top", (y(d[rowKey]) - tooltipHeight - 9 + titleHeight + labelHeight + xAxisHeight + margin + legendContainerHeight) + "px");
+
+                tooltipArrow
+                    .style("left", `${xBand(d.date) + 20 - horizontalScrollContainerEl.scrollLeft}px`)
+                    .style("top", (y(d[rowKey]) + 5 + titleHeight + labelHeight + xAxisHeight + margin + legendContainerHeight) + "px");
             };
             var mouseleave = function (e, d) {
                 tooltip.style("display", "none")
+                tooltipArrow.style("display", "none")
             }
 
             plotArea.selectAll()
@@ -265,6 +292,7 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 </svg>
             </div>
             <div className="tooltip"></div>
+            <div className="tooltipArrow" />
         </div>
     );
 }

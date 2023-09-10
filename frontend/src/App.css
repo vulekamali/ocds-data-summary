@@ -64,14 +64,44 @@ body {
 
 /**** Z-INDEX SIBLINGS ******/
 .tooltip {
-    z-index: 30;
+    z-index: 40; /* above y axis and everyting else */
     display: none;
-    background-color: white;
-    border: 1px solid black;
-    padding: 5px;
+    background-color: black;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
     position: absolute;
-    width: 200px;
     pointer-events: none; /* avoid flickering when mouse briefly moves over tooltip */
+
+    .titleRow {
+        display: grid;
+        grid-template-columns: auto max-content;
+        font-weight: bold;
+    }
+    .name {
+        font-weight: bold;
+        padding-bottom: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .subTotalRow {
+        display: grid;
+        grid-template-columns: auto max-content;
+    }
+}
+.tooltipArrow {
+    z-index: 40; /* above y axis and everyting else */
+    display: none;
+    position: absolute;
+    pointer-events: none; /* avoid flickering when mouse briefly moves over tooltip */width: 0; 
+
+    /* arrow down https://css-tricks.com/snippets/css/css-triangle/ */
+    width: 0px;
+    height: 0; 
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid #000;
 }
 
 .stickyXAxisContainer {
