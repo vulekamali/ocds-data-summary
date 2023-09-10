@@ -51,13 +51,13 @@ function App() {
   return (
     <div className="App">
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static" >
+        <AppBar position="static" sx={{bgcolor: "white", color: "black", boxShadow: "unset"}}>
           <Typography component="h1" sx={{ flexGrow: 1, padding: "12px", fontSize: "18px"}}>
             OCPO Open Contracting data
           </Typography>
         </AppBar>
       </Box>
-      <div className="description" style={{"padding": "8px 12px 0px 12px"}}>
+      <div className="description" style={{"padding": "0px 12px 0px 12px"}}>
         <p>This shows the number of procurement processes initiated by each organ of state each month according to the <a
           href="https://data.etenders.gov.za/">OCPO Open Contracting Data Standard API</a></p>
 
@@ -67,10 +67,10 @@ function App() {
             aria-controls="panel1a-content"
             id="panel1a-header"
           >
-            <Typography>How to interpret this</Typography>
+            <Typography sx={{fontSize: "12px"}}>How to interpret this</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography component="div">
+            <Typography component="div" sx={{fontSize: "12px"}}>
               <p>Blocks can be blank either because no procurement took place in that period, or because data has not been uploaded for that period yet.</p>
               <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
             </Typography>

@@ -59,6 +59,8 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 scrollContainerWidth = width,
                 height = titleHeight + labelHeight + plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
 
+            const minColor = "#f3eae0";
+            const maxColor = "#AB5600";
 
             container.style("height", `${height}px`);
 
@@ -127,7 +129,6 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 .selectAll('foreignObject')
                 .data(rows)
                 .join((enter) => {
-                    console.log(enter, width)
                     enter.append("foreignObject")
                         .attr("y", (row) => y(row) + 8)
                         .attr("width", `${width}px`)
@@ -149,7 +150,7 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
 
             // Build color scale
             const myColor = d3.scaleLinear()
-                .range(["#eee", "#000"])
+                .range([minColor, maxColor])
                 .domain([min, max]);
 
             // create a tooltip
