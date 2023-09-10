@@ -91,16 +91,7 @@ function App() {
 }
 
 function Section({ heading, data }) {
-  return <>
-    <Typography component="h2" sx={{
-      fontSize: "15px",
-      fontWeight: "600",
-      paddingX: "12px"
-    }}>
-      {heading}
-    </Typography>
-    <Heatmap data={data} rowKey="buyer_name" colKey="tender_year_month" valKey="total_count" />
-  </>
+  return <Heatmap title={heading} data={data} rowKey="buyer_name" colKey="tender_year_month" valKey="total_count" />
 }
 
 export default App;

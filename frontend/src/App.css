@@ -1,3 +1,6 @@
+body {
+    font-size: 12px;
+}
 
 .container {
     position: relative;
@@ -42,10 +45,36 @@
     display: inline-block;
 }
 
+.chartLabel {
+    padding: 0px 12px 0px 12px;
+}
+
 .legend-container {
-    border-radius: 5px;
+    padding: 0px 12px 0px 12px;
+    margin-top: 8px;
     background-color: #fff;
-    width: 350px;
+    max-width: 350px;
+    display: grid;
+    grid-template-columns: min-content auto;
+}
+
+.legendTitle {
+    padding: 3px 3px 3px 0;
+}
+
+.swatchesContainer {
+    display: inline-grid;
+    grid-template-columns: auto auto auto auto auto
+}
+
+.swatch {
+    display: inline-block;
+    margin: 2px;
+    border-radius: 2px;
+    font-size: 10px;
+    text-align: center;
+    padding: 3px 0 3px 0;
+    font-weight: 600;
 }
 
 /**** Z-INDEX SIBLINGS ******/
@@ -64,7 +93,7 @@
     position: sticky;
     height: 50px;
     background-color: white;
-    z-index: 20;
+    z-index: 30; /* above plot area and y axis */
 }
 
 .horizontalScrollContainer {

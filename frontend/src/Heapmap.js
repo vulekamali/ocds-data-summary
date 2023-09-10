@@ -1,10 +1,11 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
+import { isColorLight } from './util';
+import Typography from '@mui/material/Typography';
 
-export default function Heatmap({ data, rowKey, colKey, valKey }) {
+export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
     const [width, setWidth] = React.useState(0);
-    const [legendHeight] = React.useState(100);
 
     const ref = React.useRef();
 
@@ -51,7 +52,7 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
 
             const plotHeight = rows.length * squareSize;
             const xAxisHeight = 20;
-            const legendContainerHeight = 100;
+            const legendContainerHeight = 21;
             const margin = 30,
                 scrollContainerWidth = width,
                 height = plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
@@ -121,13 +122,13 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
                 .attr("width", width)
                 .attr("height", plotHeight)
                 .style("position", "relative")
-                .style("top", `${xAxisHeight + margin + legendHeight + 5}px`)
+                .style("top", `${xAxisHeight + margin + legendContainerHeight + 5}px`)
                 .select(".y-axis")
                 .selectAll('foreignObject')
                 .data(rows)
                 .join((enter) => {
                     console.log(enter, width)
-                    const foreignObject = enter.append("foreignObject")
+                    enter.append("foreignObject")
                         .attr("x", "8")
                         .attr("y", (row) => y(row) + 8)
                         .attr("width", width + "px")
@@ -138,11 +139,11 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
                         .attr("class", "yLabel")
                         .text((row) => row);
                 },
-                (update) => {
-                    container.select(".yAxisContainer")
-                    .selectAll('foreignObject')
-                    .attr("width", width + "px");
-                })
+                    (update) => {
+                        container.select(".yAxisContainer")
+                            .selectAll('foreignObject')
+                            .attr("width", width + "px");
+                    })
             const values = data.map((d) => d[valKey]);
             const min = d3.min(values);
             const max = d3.max(values);
@@ -191,11 +192,11 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
 
             return () => console.log("cleanup function");
         },
-        [width, data, rowKey, colKey, valKey, legendHeight]
+        [width, data, rowKey, colKey, valKey]
     );
 
     const addLegend = (container, myColor, range) => {
-        const legendContainer = container.select(".legend-container");
+        const swatchesContainer = container.select(".swatchesContainer");
 
         const legendVals = []
         for (let i = 0; i <= 4; i++) {
@@ -205,51 +206,40 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             })
         }
 
-        // Add one dot in the legend for each name.
-        const size = { height: 20, width: 50 }
-        legendContainer.selectAll("mydots")
+        swatchesContainer.selectAll(".swatch")
             .data(legendVals)
-            .enter()
-            .append("rect")
-            .attr("x", function (d, i) {
-                return 40 + i * (size.width + 5)
-            })
-            .attr("y", 40)
-            .attr("width", size.width)
-            .attr("height", size.height)
-            .style("fill", function (d) {
-                return myColor(d.value)
-            })
-
-        // Add one dot in the legend for each name.
-        legendContainer.selectAll("mylabels")
-            .data(legendVals)
-            .enter()
-            .append("text")
-            .attr("x", function (d, i) {
-                return 40 + i * (size.width + 5)
-            })
-            .attr("y", size.height + 55) // 100 is where the first dot appears. 25 is the distance between dots
-            .attr("fill", "#34495e")
-            .attr("width", "100px")
-            .text(function (d) {
-                return Math.round(d.value)
-            })
-            .attr("text-anchor", "left")
-            .style("alignment-baseline", "middle");
-
-        legendContainer.append("text")
-            .attr("x", 40)
-            .attr("y", 30)
-            .text("Number of procurement processes");
+            .join((enter) => {
+                enter.append("div")
+                    .attr("class", "swatch")
+                    .style("background-color", function (d) {
+                        return myColor(d.value)
+                    })
+                    .style("color", function (d) {
+                        return isColorLight(myColor(d.value)) ? "#000" : "#fff"
+                    })
+                    .text(function (d) {
+                        return Math.round(d.value)
+                    })
+            });
     }
 
     return (
         <div ref={ref} className="container">
-            <svg className="legend-container" style={{ height: legendHeight }}></svg>
             <ScrollSync>
                 <>
                     <div className="stickyXAxisContainer">
+                        <Typography component="h2" sx={{
+                            fontSize: "15px",
+                            fontWeight: "600",
+                            paddingX: "12px"
+                        }}>
+                            {title}
+                        </Typography>
+                        <div className='chartLabel'>Number of procurement processes</div>
+                        <div className="legend-container">
+                            <span className='legendTitle'>Legend:</span>
+                            <div className='swatchesContainer'></div>
+                        </div>
                         <ScrollSyncPane>
                             <div className='horizontalScrollXAxisContainer'>
                                 <svg>
