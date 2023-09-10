@@ -1,7 +1,7 @@
 import React from 'react';
 import * as d3 from 'd3';
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
-import { isColorLight } from './util';
+import { isColorLight, months } from './util';
 import Typography from '@mui/material/Typography';
 
 export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
@@ -170,9 +170,12 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 tooltipArrow.style("display", "block")
             };
             var mousemove = function (e, d) {
+                const date = d[colKey];
+                const [year, month] = date.split("-");
+                const monthLabel = months[parseInt(month-1)];
                 tooltip
                     .html(
-                        `<div class="titleRow"><div class="date">${d[colKey]}</div><div class="total">${d[valKey]} items</div></div>` +
+                        `<div class="titleRow"><div class="date">${monthLabel} ${year}</div><div class="total">${d[valKey]} items</div></div>` +
                         `<div class="name">${d[rowKey]}</div>` +
                         `<div class="subTotalRow"><div class="date">Has planning</div><div class="total">${d["has_planning"]}</div></div>` +
                         `<div class="subTotalRow"><div class="date">Has tender</div><div class="total">${d["has_tender"]}</div></div>` +
