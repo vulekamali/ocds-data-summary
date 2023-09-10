@@ -23,26 +23,14 @@ body {
     pointer-events: none;
 }
 
-.wrap-and-truncate {
-    word-wrap: break-word;
-    margin-top: 0px;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    display: -webkit-box;
-    padding-right: 10px;
-}
 
 .yLabel {
     color: white;
     font-size: 12px;
-}
-
-.yLabelContainer {
     background: rgba(0, 0, 0, 0.63);
     padding: 0 4px 0 4px;
+    margin: 0 8px 0 8px;
     border-radius: 2px;
-    display: inline-block;
 }
 
 .chartLabel {

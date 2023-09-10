@@ -53,7 +53,7 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
             const plotHeight = rows.length * squareSize;
             const xAxisHeight = 20;
             const legendContainerHeight = 21;
-            const margin = 30,
+            const margin = 8,
                 scrollContainerWidth = width,
                 height = plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
 
@@ -129,20 +129,19 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 .join((enter) => {
                     console.log(enter, width)
                     enter.append("foreignObject")
-                        .attr("x", "8")
                         .attr("y", (row) => y(row) + 8)
-                        .attr("width", width + "px")
+                        .attr("width", `${width}px`)
                         .attr("height", "30px")
                         .append("xhtml:div")
                         .attr("class", "yLabelContainer")
                         .append("span")
                         .attr("class", "yLabel")
-                        .text((row) => row);
+                        .text((row) => width < 700 && row.length > 40 ? row.slice(0, 40) + "..." : row);
                 },
                     (update) => {
                         container.select(".yAxisContainer")
                             .selectAll('foreignObject')
-                            .attr("width", width + "px");
+                            .attr("width", `${width}px`);
                     })
             const values = data.map((d) => d[valKey]);
             const min = d3.min(values);
