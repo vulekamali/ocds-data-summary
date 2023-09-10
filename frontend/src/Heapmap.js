@@ -46,7 +46,7 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             const rows = [...new Set(data.map((d) => d[rowKey]))];
             rows.sort();
 
-            const squareSize = 40;
+            const squareSize = 50;
             const plotWidth = (filledCols.length + 1) * squareSize;
 
             const plotHeight = rows.length * squareSize;
@@ -119,17 +119,17 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             container.select(".yAxisContainer")
                 .select("svg")
                 .attr("width", width)
-                .attr("height", height)
+                .attr("height", plotHeight)
                 .style("position", "relative")
-                .style("top", `${xAxisHeight + margin + legendHeight}px`)
+                .style("top", `${xAxisHeight + margin + legendHeight + 5}px`)
                 .select(".y-axis")
                 .selectAll('foreignObject')
                 .data(rows)
                 .join((enter) => {
                     console.log(enter, width)
                     enter.append("foreignObject")
-                        .attr("x", "0")
-                        .attr("y", (row) => y(row))
+                        .attr("x", "8")
+                        .attr("y", (row) => y(row) + 8)
                         .attr("width", width + "px")
                         .attr("height", "30px")
                         .append("xhtml:div")
