@@ -2,6 +2,16 @@ body {
     font-size: 12px;
 }
 
+@media (min-width: 800px) {
+    body {
+        padding: 30px 200px;
+    }
+}
+
+.description {
+    max-width: 600px;
+}
+
 .container {
     position: relative;
     margin: 8px 0 29px 0;
