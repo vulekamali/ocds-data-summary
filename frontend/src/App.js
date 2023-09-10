@@ -46,7 +46,7 @@ function App() {
         alert(error)
       });
   };
-  useEffect(() => loadData, [url]);
+  useEffect(loadData, [url]);
 
   return (
     <div className="App">
