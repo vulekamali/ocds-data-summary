@@ -50,7 +50,6 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             const plotWidth = (filledCols.length + 1) * squareSize;
 
             const plotHeight = rows.length * squareSize;
-            const yAxisWidth = width > 600 ? 170 : width / 3;
             const xAxisHeight = 20;
             const legendContainerHeight = 100;
             const margin = 30,
@@ -278,19 +277,4 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             <div className="tooltip"></div>
         </div>
     );
-}
-
-const replaceTextElements = function (textElement, textValue) {
-    const el = d3.select(textElement);
-    const p = d3.select(textElement.parentNode);
-
-    el.remove();
-};
-
-const updateForeignObject = function (foreignObject, width) {
-    const xpadding = 10;
-    foreignObject.attr('x', -1 * (width + xpadding))
-        .attr('y', -5)
-        .attr("width", width)
-        .attr("height", 25)
 }
