@@ -47,6 +47,8 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
             const rows = [...new Set(data.map((d) => d[rowKey]))];
             rows.sort();
 
+            const titleHeight = 23;
+            const labelHeight = 16;
             const squareSize = 50;
             const plotWidth = (filledCols.length + 1) * squareSize;
 
@@ -55,7 +57,7 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
             const legendContainerHeight = 21;
             const margin = 8,
                 scrollContainerWidth = width,
-                height = plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
+                height = titleHeight + labelHeight + plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
 
 
             container.style("height", `${height}px`);
@@ -85,20 +87,18 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
             };
 
             // Create sticky x axis at the top
-            container.select(".stickyXAxisContainer")
-                .style("top", `0px`)
-                .style("width", `${scrollContainerWidth}px`)
-                .style("left", `${margin + 1 + 20}px`)
+            container.select(".horizontalScrollXAxisContainer")
+                .style("height", `${xAxisHeight + margin}px`)
                 .select("svg")
-                .attr("width", plotWidth)
                 .attr("height", xAxisHeight + margin)
+                .attr("width", plotWidth)
                 .style("top", "0px")
                 .select(".x-axis.top")
                 .attr("transform", `translate(0, ${xAxisHeight - 2 + margin})`)
                 .call(d3.axisTop(xBand)
                     .tickFormat(xAxisTickFormat)
                 );
-            container.select(".stickyXAxisContainer")
+            container.select(".horizontalScrollXAxisContainer")
                 .select("svg")
                 .select("rect.background")
                 .attr("width", plotWidth)
@@ -122,7 +122,7 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 .attr("width", width)
                 .attr("height", plotHeight)
                 .style("position", "relative")
-                .style("top", `${xAxisHeight + margin + legendContainerHeight + 5}px`)
+                .style("top", `${titleHeight + labelHeight + xAxisHeight + margin + legendContainerHeight + 5}px`)
                 .select(".y-axis")
                 .selectAll('foreignObject')
                 .data(rows)
