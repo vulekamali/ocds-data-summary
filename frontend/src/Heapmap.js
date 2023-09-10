@@ -53,7 +53,7 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             const xAxisHeight = 20;
             const legendContainerHeight = 100;
             const margin = 30,
-                scrollContainerWidth = width - 2 * margin,
+                scrollContainerWidth = width,
                 height = plotHeight + margin * 2 + xAxisHeight * 2 + legendContainerHeight;
 
 
@@ -64,7 +64,7 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
             const svg = d3.select(horizontalScrollContainerEl)
                 .style("width", `${scrollContainerWidth}px`)
                 .style("height", `${plotHeight + xAxisHeight + margin}px`)
-                .style("left", `${margin + 1}px`)
+                .style("left", `0px`)
                 .select("svg.main")
                 .attr("width", plotWidth)
                 .attr("height", plotHeight + xAxisHeight)
@@ -127,7 +127,7 @@ export default function Heatmap({ data, rowKey, colKey, valKey }) {
                 .data(rows)
                 .join((enter) => {
                     console.log(enter, width)
-                    enter.append("foreignObject")
+                    const foreignObject = enter.append("foreignObject")
                         .attr("x", "8")
                         .attr("y", (row) => y(row) + 8)
                         .attr("width", width + "px")

@@ -70,7 +70,7 @@ function App() {
             <Typography>How to interpret this</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Typography>
+            <Typography component="div">
               <p>Blocks can be blank either because no procurement took place in that period, or because data has not been uploaded for that period yet.</p>
               <p>Data is only available if an organ of state uploaded the data to the eTender portal. Data queries should be directed first to the respective organ of state, before reaching out to the OCPO.</p>
             </Typography>
