@@ -19,6 +19,8 @@ x-common:
     - DJANGO_SECRET_KEY=not-secret-in-dev
     - DJANGO_WHITENOISE_AUTOREFRESH=True
     - TAG_MANAGER_ENABLED=False
+    - KINGFISHER_ZA_NT_API_URL
+    - INITIAL_CRAWL_TIME
 
 services:
 

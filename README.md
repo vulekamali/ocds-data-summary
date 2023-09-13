@@ -2,16 +2,81 @@
 [![Build Status](https://travis-ci.org/jbothma/ocds_data_summary.png)](https://travis-ci.org/jbothma/ocds_data_summary)
 
 OCDS data summary
-===============================
+=================
 
-This is the backend for the Vulekamali and OCPO OCDS data availability summary.
+This is a monorepo consisting of the backend and frontend of the OCPO OCDS Data Summary.
 
-It fetches data from the OCPO OCDS API, and produces a summary of the available OCDS data
-which can be accessed via its API.
+The OCPO OCDS Data Summary fetches information from the Office of the Chief 
+Procurement Officer's API of data in the Open Contracting Data Standard and
+presents it visually in a way that aims to make it very easy to see which
+organs of state have published data, which have gaps. It also makes it easy to
+see if there are particular time periods with or without data.
 
+The ultimate aim is to promote more complete public data for transparent procurement.
+
+Backend
+-------
+
+The backend is a Django application. It includes a manage command that fetches
+the latest data from the OCPO API, and updates its store of information, then
+produces an up to date summary. The summary is available via its API for the
+frontend to consume.
+
+
+Frontend
+--------
+
+The frontend is a React static single page app. When it loads, it fetches the latest
+summary from the backend's API, then renders the visualisation of the data.
+
+
+Operations
+----------
+
+### Creating admin users
+
+Create a superuser from the command line:
+
+    python manage.py createsuperuser
+
+### Creating categories and organising entities into categories
+
+Visit the URL the backend with `/admin` at the end of the URL.
+
+Create categories as needed, e.g. `National departments` using the Category admin pages.
+
+Entities can then be added to categories - data for a particular `buyer_name` will
+be presented under the entity in the configured category. Entities can be added
+one at a time, or using the Import option on the Entity list page.
+
+The summary will reflect the category changes after the next summary update from the
+command line.
+
+### Update the data
+
+The data can be updated from the command line:
+
+    python manage.py update
+
+The `update` command is equivalent to running the `fetch` and then `summarise` command one after the other.
+
+The `fetch` command fetches the data from the OCPO API.
+
+The `summarise` command produces a new summary using the latest category and OCDS data.
+
+### Updating automatically
+
+To keep the data and summary up to date, set up an automated task on the server to run the
+`update` command. Running daily is usually sufficient. Avoid multiple updates running at 
+the same time.
 
 Project Layout
 --------------
+
+### Frontend
+
+The frontend source code is in the `frontend` directory. See the README.md file
+there for more.
 
 ### Docker
 
@@ -63,14 +128,6 @@ the above again:
     docker-compose down --volumes
 
 
-Running tests
--------------
-
-    docker-compose run --rm web python manage.py test
-
-Tests might fail to connect to the databse if the docker-compose `db` service wasn't running and configured yet. Just check the logs for the `db` service and run the tests again.
-
-
 Settings
 --------
 
@@ -82,3 +139,5 @@ Undefined settings result in exceptions at startup to let you know they are not 
 | `DATABASE_URL` | undefined | String | `postgresql://user:password@hostname/dbname` style URL |
 | `DJANGO_DEBUG_TOOLBAR` | False | Boolean | Set to `True` to enable the Django Debug toolbar NOT ON A PUBLIC SERVER! |
 | `DJANGO_SECRET_KEY` | undefined | String | Set this to something secret and unguessable in production. The security of your cookies and other crypto stuff in django depends on it. |
+| `KINGFISHER_ZA_NT_API_URL` | `"https://ocds-api.etenders.gov.za/api/OCDSReleases"` | String | Kingfisher Collect setting to modify the URL to the OCPO Open Contracting data API if needed. |
+| `INITIAL_CRAWL_TIME` | `"2023-08-21T18:20:02"` | String | Initial crawl time - the value isn't so important but ensure it is consistent over time so that the same data directory is used to crawl incrementally rather than crawling all the data each time. |

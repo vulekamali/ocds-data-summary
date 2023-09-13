@@ -7,9 +7,10 @@ from kingfisher_scrapy import settings as kingfisher_settings
 from datetime import datetime
 from typing import Dict, Any
 from constance import config
-
 from django.conf import settings
+
 from ocds_data_summary.core.models import FetchReport
+from ocds_data_summary.core.summary import summarise
 
 
 def get_settings():
