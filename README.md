@@ -22,6 +22,11 @@ the latest data from the OCPO API, and updates its store of information, then
 produces an up to date summary. The summary is available via its API for the
 frontend to consume.
 
+Note that this application keeps a copy of the data downloaded from the API on
+disk in the `data` directory and uses it to compile a full dataset for each update.
+If this data is lost, the `south_africa_national_treasury_api` table must be dropped
+so that the `fetch` command using [Kingfisher Collect](https://github.com/vulekamali/kingfisher-collect)
+knows to fetch all data from the API anew.
 
 Frontend
 --------
@@ -51,6 +56,10 @@ one at a time, or using the Import option on the Entity list page.
 
 The summary will reflect the category changes after the next summary update from the
 command line.
+
+Any entities whose buyer_name does not match an entity in a category in the admin
+interface will automatically be grouped under the default group. The default
+group name can be customised in the admin interface on the Constance Config page.
 
 ### Update the data
 
