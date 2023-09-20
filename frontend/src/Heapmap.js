@@ -71,12 +71,11 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
 
             const svg = d3.select(horizontalScrollContainerEl)
                 .style("width", `${scrollContainerWidth}px`)
-                .style("height", `${plotHeight + xAxisHeight + margin}px`)
+                .style("height", `${plotHeight + margin + 10}px`)
                 .style("left", `0px`)
                 .select("svg.main")
                 .attr("width", plotWidth)
-                .attr("height", plotHeight + xAxisHeight)
-                .style("top", `${xAxisHeight}px`);
+                .attr("height", plotHeight);
 
             const plotArea = svg.select(".plot-area")
                 .attr("transform", `translate(0, 0)`);
@@ -111,13 +110,6 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                 .attr("width", plotWidth)
                 .attr("height", xAxisHeight + margin)
                 .attr("fill", "#fff");
-
-            // Create x axis at the bottom
-            svg.select(".x-axis.bottom")
-                .attr("transform", `translate(0, ${plotHeight})`)
-                .call(d3.axisBottom(xBand)
-                    .tickFormat(xAxisTickFormat)
-                );
 
             // Build y scales and axis:
             const y = d3.scaleBand()
@@ -283,7 +275,6 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                         <div className="horizontalScrollContainer">
                             <svg className="main">
                                 <g className="plot-area" />
-                                <g className="x-axis bottom" />
                             </svg>
                         </div>
                     </ScrollSyncPane>

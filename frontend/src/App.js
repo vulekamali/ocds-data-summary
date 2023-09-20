@@ -18,7 +18,7 @@ function Loading() {
 function App() {
   const [categoryResults, setCategoryResults] = React.useState(null);
   const [lastUpdated, setLastUpdated] = React.useState(null);
-  const url = "https://ocds-summary-backend.vulekamali.gov.za/api/summary/latest";
+  const url = process.env.REACT_APP_API_URL || "https://ocds-summary-backend.vulekamali.gov.za/api/summary/latest";
 
   const loadData = () => {
     fetch(url)
