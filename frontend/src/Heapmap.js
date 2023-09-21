@@ -134,12 +134,14 @@ export default function Heatmap({ title, data, rowKey, colKey, valKey }) {
                         .attr("class", "yLabelContainer")
                         .append("span")
                         .attr("class", "yLabel")
-                        .text((row) => width < 700 && row.length > 40 ? row.slice(0, 40) + "..." : row);
+                        .text((row) => (width < 500 && row.length > 40) ? row.slice(0, 40) + "..." : row);
                 },
                     (update) => {
                         container.select(".yAxisContainer")
                             .selectAll('foreignObject')
-                            .attr("width", `${width}px`);
+                            .attr("width", `${width}px`)
+                            .select(".yLabel")
+                            .text((row) => (width < 500 && row.length > 40) ? row.slice(0, 40) + "..." : row);
                     })
             const values = data.map((d) => d[valKey]);
             const min = d3.min(values);

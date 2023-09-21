@@ -8,8 +8,8 @@ This is a monorepo consisting of the backend and frontend of the OCPO OCDS Data 
 
 The OCPO OCDS Data Summary fetches information from the Office of the Chief 
 Procurement Officer's API of data in the Open Contracting Data Standard and
-presents it visually in a way that aims to make it very easy to see which
-organs of state have published data, which have gaps. It also makes it easy to
+presents it visually in a way that aims to make it easier to see which
+organs of state have published data, and which may have gaps. It also makes it easy to
 see if there are particular time periods with or without data.
 
 The ultimate aim is to promote more complete public data for transparent procurement.
@@ -21,6 +21,12 @@ The backend is a Django application. It includes a manage command that fetches
 the latest data from the OCPO API, and updates its store of information, then
 produces an up to date summary. The summary is available via its API for the
 frontend to consume.
+
+It uses [Kingfisher Collect](https://github.com/vulekamali/kingfisher-collect) to
+incrementally fetch the OCDS Releases published since the previous latest release 
+from the API, compile all the releases so that all the data about the same
+procurement process is collated into a single release, and then stores it in the
+database.
 
 Note that this application keeps a copy of the data downloaded from the API on
 disk in the `data` directory and uses it to compile a full dataset for each update.
